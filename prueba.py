@@ -3,22 +3,50 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
-class PythonOrgSearch(unittest.TestCase):
+# Import of Exceptions in case of need for handling.
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import ElementNotVisibleException
+from selenium.common.exceptions import WebDriverException
 
-    def setUp(self):
+from PIL import Image
+
+class myTests():
+    usernameInput = None
+    passwordInput = None
+
+    def __init__(self, username, password):
+        # Driver initiliaze to open browser (Chrome).
         self.driver = webdriver.Chrome()
 
-    def test_search_in_python_org(self):
-        driver = self.driver
-        driver.get("http://www.python.org")
-        self.assertIn("Python", driver.title)
-        elem = driver.find_element(By.NAME, "q")
-        elem.send_keys("pycon")
-        elem.send_keys(Keys.RETURN)
-        self.assertNotIn("No results found.", driver.page_source)
+        # instance attributes
+        self.username = username
+        self.password = password
 
-    def tearDown(self):
-        self.driver.close()
+    # Goes to the URL provided.
+    def logInTest(self):
+        self.driver.get("https://www.saucedemo.com/")
 
-if __name__ == "__main__":
-    unittest.main()
+        # Looks for elements (username, password) on website form.
+        self.usernameInput = self.driver.find_element(By.ID, "user-name")
+        self.usernameInput.send_keys("standard_user")
+
+        self.passwordInput = self.driver.find_element(By.ID, "password")
+        self.passwordInput.send_keys("secret_sauce")
+
+        if self.username == "standard_user" and self.password == "secret_sauce":
+            # changes URL after logIn button is clicked
+            loginButton = self.driver.find_element(By.ID, "login-button").click()
+            self.driver.get("https://www.saucedemo.com/inventory.html")
+            self.driver.save_screenshot('/images/logIn/logSucessful.png')
+            self.driver.quit()
+
+        else:
+            print("Username or Password doesn't match!, try again.")
+            self.driver.save_screenshot('/images/logIn/logFail.png')
+            self.driver.quit()
+
+try:
+    testOne = myTests("standard_user", "secret_sauce")
+    testOne.logInTest()
+except Exception as e:
+    print(e)    
