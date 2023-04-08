@@ -37,12 +37,12 @@ class myTests():
             # changes URL after logIn button is clicked
             loginButton = self.driver.find_element(By.ID, "login-button").click()
             self.driver.get("https://www.saucedemo.com/inventory.html")
-            self.driver.save_screenshot('/images/logIn/logSucessful.png')
+            self.driver.save_screenshot('logSucessful.png')
             self.driver.quit()
 
         else:
             print("Username or Password doesn't match!, try again.")
-            self.driver.save_screenshot('/images/logIn/logFail.png')
+            self.driver.save_screenshot('logFail.png')
             self.driver.quit()
 
 try:
